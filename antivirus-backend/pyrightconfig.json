@@ -1,0 +1,17 @@
+{
+  "pythonVersion": "3.11",
+  "pythonPlatform": "Linux",
+  "venvPath": ".",
+  "venv": ".venv",
+  "include": [
+    "app",
+    "tests"
+  ],
+  "exclude": [
+    ".venv",
+    "**/__pycache__"
+  ],
+  "reportMissingImports": true,
+  "reportMissingModuleSource": false,
+  "typeCheckingMode": "basic"
+}

@@ -1,0 +1,123 @@
+version: "3.9"
+
+services:
+  # ── FastAPI Application ──────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: antivirus_api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://avuser:avpassword@postgres:5432/antivirus_db
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-supersecretchangeme}
+      - YARA_RULES_DIR=/app/app/rules
+      - MAX_FILE_SIZE_MB=50
+      - ALLOWED_ORIGINS=http://localhost:19006,exp://localhost:19000
+      - API_KEY_ENABLED=false
+      - LOG_LEVEL=info
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - upload_tmp:/tmp/avscanner
+    networks:
+      - avnet
+    restart: unless-stopped
+
+  # ── Celery Worker ────────────────────────────────────────────────────────────
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: antivirus_worker
+    command: >
+      celery -A app.worker.celery_app.celery worker
+      --loglevel=info
+      --concurrency=2
+      -Q deep_scan,default
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://avuser:avpassword@postgres:5432/antivirus_db
+      - REDIS_URL=redis://redis:6379/0
+      - YARA_RULES_DIR=/app/app/rules
+    depends_on:
+      - redis
+      - postgres
+    volumes:
+      - upload_tmp:/tmp/avscanner
+    networks:
+      - avnet
+    restart: unless-stopped
+
+  # ── Celery Flower (monitoring UI) ────────────────────────────────────────────
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: antivirus_flower
+    command: >
+      celery -A app.worker.celery_app.celery flower
+      --port=5555 --broker=redis://redis:6379/0
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+      - celery_worker
+    networks:
+      - avnet
+    restart: unless-stopped
+
+  # ── Redis ────────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: antivirus_redis
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - avnet
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── PostgreSQL ───────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: antivirus_postgres
+    environment:
+      POSTGRES_DB: antivirus_db
+      POSTGRES_USER: avuser
+      POSTGRES_PASSWORD: avpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - avnet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U avuser -d antivirus_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  pg_data:
+  upload_tmp:
+
+networks:
+  avnet:
+    driver: bridge

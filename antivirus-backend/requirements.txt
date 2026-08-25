@@ -1,0 +1,50 @@
+# ── Core Framework ──────────────────────────────────────────────────────────────
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+python-multipart==0.0.19
+aiofiles==24.1.0
+
+# ── Pydantic v2 ─────────────────────────────────────────────────────────────────
+pydantic==2.10.3
+pydantic-settings==2.6.1
+
+# ── Database / ORM ──────────────────────────────────────────────────────────────
+sqlalchemy==2.0.36
+asyncpg==0.30.0           # async PostgreSQL driver
+alembic==1.14.0
+psycopg2-binary==2.9.10   # sync driver for alembic migrations
+
+# ── Cache ────────────────────────────────────────────────────────────────────────
+redis==5.2.1
+hiredis==3.0.0            # C-extension parser for speed
+
+# ── Task Queue ───────────────────────────────────────────────────────────────────
+celery==5.4.0
+flower==2.0.1             # Celery monitoring web UI
+
+# ── Malware & Security Analysis ──────────────────────────────────────────────────
+yara-python==4.5.1
+python-magic==0.4.27
+
+# ── APK Analysis ─────────────────────────────────────────────────────────────────
+androguard==3.3.5
+
+# ── PE / Binary Analysis ─────────────────────────────────────────────────────────
+pefile==2023.2.7
+
+# ── Hashing / Crypto ─────────────────────────────────────────────────────────────
+# hashlib is built-in; no extra install needed
+
+# ── HTTP / Networking ─────────────────────────────────────────────────────────────
+httpx==0.28.1             # async HTTP for health checks & external feeds
+
+# ── Utilities ────────────────────────────────────────────────────────────────────
+python-dotenv==1.0.1
+structlog==24.4.0         # structured JSON logging
+tenacity==9.0.0           # retry logic for DB/Redis connections
+
+# ── Testing ───────────────────────────────────────────────────────────────────────
+pytest==8.3.4
+pytest-asyncio==0.24.0
+pytest-cov==6.0.0
+httpx==0.28.1             # used in async test client

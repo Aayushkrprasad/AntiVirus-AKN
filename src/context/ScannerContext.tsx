@@ -158,6 +158,7 @@ export const ScannerProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const navigateTo = (screen: ScreenName, params?: any) => {
+    refreshStats();
     let newTab: 'Security' | 'Password' | 'Profile' = navState.activeTab;
     if (
       screen === 'SecurityCenter' ||

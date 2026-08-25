@@ -17,7 +17,8 @@ export class RealDeviceService implements INativeScannerService {
     try {
       if (Device.totalMemory) {
         totalMemoryMb = Math.round(Device.totalMemory / (1024 * 1024));
-        ramUsagePercent = 'Unavailable';
+        const gb = (Device.totalMemory / (1024 * 1024 * 1024)).toFixed(1);
+        ramUsagePercent = `${gb} GB`;
       }
     } catch {
       ramUsagePercent = 'Unavailable';

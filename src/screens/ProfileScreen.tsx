@@ -18,6 +18,13 @@ export const ProfileScreen: React.FC = () => {
     );
   };
 
+  const ramDisplayValue =
+    systemStats.ramUsagePercent !== 'Unavailable'
+      ? `${systemStats.ramUsagePercent}`
+      : systemStats.totalMemoryMb !== 'Unavailable'
+      ? `${systemStats.totalMemoryMb} MB`
+      : 'Unavailable';
+
   return (
     <View style={styles.container}>
       <Header title="Device & Security Profile" subtitle="Local device environment & shield settings" />
@@ -46,7 +53,7 @@ export const ProfileScreen: React.FC = () => {
               <View style={styles.licenseRow}>
                 <Ionicons name="hardware-chip-outline" size={14} color={Colors.safe} />
                 <Text style={styles.licenseText} numberOfLines={1}>
-                  Total RAM: {systemStats.totalMemoryMb ? `${systemStats.totalMemoryMb} MB` : 'Unavailable'}
+                  Total RAM: {ramDisplayValue}
                 </Text>
               </View>
             </View>

@@ -6,7 +6,7 @@ AntiVirus-AKN is an Expo React Native app focused on mobile security workflows s
 
 - Node.js (LTS recommended)
 - npm
-- Expo CLI (via `npx expo`)
+- Expo (provided by the project dependency; use `npx expo` or the npm scripts below)
 
 ## Getting Started
 

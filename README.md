@@ -22,8 +22,8 @@ AntiVirus-AKN is an Expo React Native app focused on mobile security workflows s
 ## Available Scripts
 
 - `npm run start` - Start Expo development server
-- `npm run android` - Run on Android
-- `npm run ios` - Run on iOS
+- `npm run android` - Run on Android (requires Android SDK / emulator)
+- `npm run ios` - Run on iOS (requires Xcode on macOS)
 - `npm run web` - Run in web browser
 
 ## License

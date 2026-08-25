@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, NativeModules } from 'react-native';
 import * as Device from 'expo-device';
 import * as Battery from 'expo-battery';
 import * as FileSystem from 'expo-file-system/legacy';
@@ -49,7 +49,17 @@ export class RealDeviceService implements INativeScannerService {
       batteryLevelPercent = 'Unavailable';
     }
 
-    const batteryTempCelsius: number | string = 'Unavailable';
+    let batteryTempCelsius: number | string = 'Unavailable';
+    if (Platform.OS === 'android' && NativeModules.InstalledAppsModule?.getDeviceTemperature) {
+      try {
+        const nativeTemp = await NativeModules.InstalledAppsModule.getDeviceTemperature();
+        if (typeof nativeTemp === 'number' || (typeof nativeTemp === 'string' && nativeTemp !== 'Unavailable')) {
+          batteryTempCelsius = nativeTemp;
+        }
+      } catch {
+        batteryTempCelsius = 'Unavailable';
+      }
+    }
 
     const deviceName = Device.deviceName || Device.modelName || 'Device';
     const osVersion = `${Device.osName || Platform.OS} ${Device.osVersion || ''}`.trim();
@@ -76,8 +86,18 @@ export class RealDeviceService implements INativeScannerService {
   }
 
   async getInstalledApps(): Promise<AppItem[]> {
-    const appsList: AppItem[] = [];
+    if (Platform.OS === 'android' && NativeModules.InstalledAppsModule) {
+      try {
+        const nativeApps = await NativeModules.InstalledAppsModule.getInstalledApps();
+        if (Array.isArray(nativeApps) && nativeApps.length > 0) {
+          return nativeApps as AppItem[];
+        }
+      } catch (err) {
+        // Fallback to application info if native module fails
+      }
+    }
 
+    const appsList: AppItem[] = [];
     try {
       const appId = Application.applicationId || 'com.antivirus.akn';
       const appName = Application.applicationName || 'AntiVirus-AKN';

@@ -129,6 +129,10 @@ export const ScannerProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   useEffect(() => {
     loadLocalData();
+    const interval = setInterval(() => {
+      refreshStats();
+    }, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const addPasswordCredential = async (site: string, usernameOrEmail: string) => {

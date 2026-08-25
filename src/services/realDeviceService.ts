@@ -61,9 +61,33 @@ export class RealDeviceService implements INativeScannerService {
       }
     }
 
-    const deviceName = Device.deviceName || Device.modelName || 'Device';
+    const formatTitleCase = (str: string) =>
+      str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+
+    const rawBrand = Device.brand || Device.manufacturer || '';
+    const brand = formatTitleCase(rawBrand);
+    const model = Device.modelName || '';
+    const rawName = Device.deviceName || '';
+
+    let deviceName = rawName;
+    if (!deviceName || deviceName === 'Device' || deviceName === 'Android' || deviceName === 'iPhone') {
+      if (brand && model) {
+        deviceName = model.toLowerCase().includes(brand.toLowerCase()) ? model : `${brand} ${model}`;
+      } else if (model) {
+        deviceName = brand ? `${brand} ${model}` : model;
+      } else if (brand) {
+        deviceName = `${brand} Mobile Device`;
+      } else {
+        deviceName = Platform.OS === 'android' ? 'Android Mobile Device' : 'Mobile Device';
+      }
+    } else {
+      if (brand && !deviceName.toLowerCase().includes(brand.toLowerCase())) {
+        deviceName = `${brand} ${deviceName}`;
+      }
+    }
+
     const osVersion = `${Device.osName || Platform.OS} ${Device.osVersion || ''}`.trim();
-    const deviceBrand = Device.brand || Device.manufacturer || Platform.OS;
+    const deviceBrand = brand || rawBrand || Platform.OS;
 
     return {
       protectionScore: 100,

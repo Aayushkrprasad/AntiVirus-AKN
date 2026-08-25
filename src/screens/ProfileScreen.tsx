@@ -4,7 +4,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../theme/colors';
 import { Header } from '../components/common/Header';
 import { Card } from '../components/common/Card';
-import { Badge } from '../components/common/Badge';
 import { ToggleRow } from '../components/common/ToggleRow';
 import { useScanner } from '../context/ScannerContext';
 
@@ -37,16 +36,13 @@ export const ProfileScreen: React.FC = () => {
               <Ionicons name="phone-portrait-outline" size={32} color={Colors.primary} />
             </View>
             <View style={styles.profileMetaCol}>
-              <View style={styles.profileTitleRow}>
-                <Text
-                  style={styles.profileName}
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                >
-                  {systemStats.deviceName || 'Local Device'}
-                </Text>
-                <Badge label="Local Environment" type="primary" style={styles.profileBadge} />
-              </View>
+              <Text
+                style={styles.profileName}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+              >
+                {systemStats.deviceName || 'Mobile Device'}
+              </Text>
               <Text style={styles.profileRole} numberOfLines={1}>
                 {systemStats.deviceBrand || 'Android'} • {systemStats.osVersion || 'Mobile OS'}
               </Text>
@@ -182,22 +178,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexShrink: 1,
   },
-  profileTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 8,
-    width: '100%',
-  },
   profileName: {
     fontSize: 16,
     fontWeight: '800',
     color: Colors.textPrimary,
-    flex: 1,
-    flexShrink: 1,
-  },
-  profileBadge: {
-    flexShrink: 0,
   },
   profileRole: {
     fontSize: 12,

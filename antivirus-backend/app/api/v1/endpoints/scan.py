@@ -43,6 +43,7 @@ from app.db.redis_client import get_redis
 from app.engine.apk_inspector import APKInspector
 from app.engine.entropy import calculate_shannon_entropy, is_high_entropy, entropy_risk_label
 from app.engine.hash_matcher import HashMatcher
+from app.engine.url_inspector import URLInspector
 from app.engine.yara_engine import YaraEngine
 from app.models.schemas import (
     APKScanResponse,
@@ -55,6 +56,8 @@ from app.models.schemas import (
     SeverityEnum,
     ThreatItem,
     ThreatTypeEnum,
+    URLScanRequest,
+    URLScanResponse,
 )
 from app.worker.tasks import deep_scan_task
 
@@ -429,3 +432,42 @@ async def get_scan_status(task_id: str) -> dict:
         return {"task_id": task_id, "state": "failed", "error": str(result.result)}
 
     return {"task_id": task_id, "state": result.state, "result": None}
+
+
+# ────────────────────────────────────────────────────────────────────────────────
+# POST /scan/url — Customized Link / URL Inspector
+# ────────────────────────────────────────────────────────────────────────────────
+
+@router.post(
+    "/url",
+    response_model=URLScanResponse,
+    summary="Analyze custom link / URL for security threats",
+    description=(
+        "Submit any customized link or URL for multi-tiered security analysis:\n"
+        "- TLD reputation & high-risk top-level domain checks\n"
+        "- Phishing & brand spoofing heuristic analysis\n"
+        "- Direct IP target & private IP (SSRF) detection\n"
+        "- HTTPS / SSL posture assessment"
+    ),
+    status_code=status.HTTP_200_OK,
+)
+async def scan_url(
+    payload: URLScanRequest,
+    background_tasks: BackgroundTasks,
+    db: AsyncSession = Depends(get_db),
+) -> URLScanResponse:
+    if not payload.url or not payload.url.strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="URL field cannot be empty.",
+        )
+
+    result = URLInspector.inspect(payload.url, check_live_status=payload.check_live_status)
+
+    background_tasks.add_task(
+        _persist_scan, result.scan_id, "url", 1, result.threats, result.duration_seconds, db
+    )
+
+    log.info("URL scan: %s | risk=%s | threats=%d | %.4fs", payload.url, result.risk_level, len(result.threats), result.duration_seconds)
+    return result
+

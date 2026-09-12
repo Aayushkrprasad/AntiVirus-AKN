@@ -187,6 +187,34 @@ class APKScanResponse(BaseModel):
     model_config = {"use_enum_values": True}
 
 
+# ── URL / Link Scan ───────────────────────────────────────────────────────────
+
+class URLScanRequest(BaseModel):
+    """POST /scan/url — request body."""
+    url: str = Field(..., description="Customized URL or link string to scan")
+    check_live_status: bool = Field(True, description="Whether to check HTTP headers & status")
+
+
+class URLScanMeta(BaseModel):
+    """Metadata extracted during URL analysis."""
+    raw_url: str
+    scheme: str
+    domain: str
+    hostname: str
+    tld: str
+    port: Optional[int] = None
+    path: str
+    is_ip: bool
+    is_ssl: bool
+    status_code: Optional[int] = None
+
+
+class URLScanResponse(ScanResponse):
+    """POST /scan/url — response payload."""
+    risk_level: SeverityEnum
+    url_meta: Optional[URLScanMeta] = None
+
+
 # ── Definitions ───────────────────────────────────────────────────────────────
 
 class DefinitionsResponse(BaseModel):

@@ -58,7 +58,7 @@ class Settings(BaseSettings):
     high_entropy_threshold: float = 7.2
 
     # ── CORS ───────────────────────────────────────────────────────────────────
-    allowed_origins: str = "http://localhost:19006,http://localhost:8081"
+    allowed_origins: str = "http://localhost:5173,http://localhost:3000,http://localhost:19006,http://localhost:8081,*"
 
     # ── Definitions versioning ─────────────────────────────────────────────────
     definitions_version: str = "v2.0.2026.08"

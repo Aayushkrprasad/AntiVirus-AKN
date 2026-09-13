@@ -35,39 +35,39 @@ export const Header: React.FC<HeaderProps> = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0.75rem 1rem',
+        padding: '0.65rem 1rem',
         maxWidth: 1280,
         margin: '0 auto',
       }}>
         {/* Brand Logo & Cyber Shield */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flexShrink: 0 }}>
           <div style={{
             position: 'relative',
-            width: 38,
-            height: 38,
-            borderRadius: 12,
+            width: 36,
+            height: 36,
+            borderRadius: 10,
             background: 'linear-gradient(135deg, #00F0FF 0%, #7000FF 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 0 16px rgba(0, 240, 255, 0.4)',
+            boxShadow: '0 0 14px rgba(0, 240, 255, 0.4)',
             flexShrink: 0,
           }}>
-            <ShieldCheck size={22} color="#000" />
+            <ShieldCheck size={20} color="#000" />
           </div>
 
           <div>
             <h1 style={{
-              fontSize: 'clamp(1rem, 4vw, 1.25rem)',
+              fontSize: '1.15rem',
               fontWeight: 900,
               letterSpacing: '-0.03em',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.35rem',
+              gap: '0.3rem',
               lineHeight: 1.1,
               whiteSpace: 'nowrap',
             }}>
-              ANTIVIRUS <span className="text-neon">AKN</span>
+              <span className="hide-on-mobile">ANTIVIRUS </span><span className="text-neon">AKN</span>
             </h1>
             <div className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.15rem' }}>
               <span style={{
@@ -163,7 +163,9 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Live Server Connection Status & Mobile Menu Toggle */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: 'auto', flexShrink: 0 }}>
+          {/* Status Badge visible on Desktop */}
           <div
+            className="hide-on-mobile"
             title={backendOnline ? 'FastAPI Backend Online' : 'Client Inspection Engine Active'}
             style={{
               display: 'flex',
@@ -188,7 +190,7 @@ export const Header: React.FC<HeaderProps> = ({
               flexShrink: 0,
             }} />
             <Server size={13} style={{ flexShrink: 0 }} />
-            <span className="hide-on-mobile">{backendOnline ? 'FastAPI Connected' : 'Engine Active'}</span>
+            <span>{backendOnline ? 'FastAPI Connected' : 'Engine Active'}</span>
           </div>
 
           <button
@@ -209,7 +211,7 @@ export const Header: React.FC<HeaderProps> = ({
             <RefreshCw size={14} />
           </button>
 
-          {/* Mobile Hamburger Menu Toggle Button */}
+          {/* Mobile Hamburger Menu Toggle Button (3-Line Menu) */}
           <button
             className="show-on-mobile"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -232,7 +234,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Mobile Collapsible Navigation Drawer */}
+      {/* Mobile Collapsible Navigation Drawer (3-Line Menu Content) */}
       {mobileMenuOpen && (
         <nav
           className="show-on-mobile"
@@ -246,18 +248,19 @@ export const Header: React.FC<HeaderProps> = ({
             boxShadow: '0 10px 25px rgba(0,0,0,0.8)',
           }}
         >
+          {/* Active Engine Status inside 3-Line Menu */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0.6rem 0.85rem',
+            padding: '0.65rem 0.85rem',
             borderRadius: 10,
             background: backendOnline ? 'rgba(16, 185, 129, 0.08)' : 'rgba(245, 158, 11, 0.08)',
             border: `1px solid ${backendOnline ? 'var(--status-safe)' : 'var(--status-warning)'}`,
             fontSize: '0.8rem',
             fontWeight: 700,
             color: backendOnline ? 'var(--status-safe)' : 'var(--status-warning)',
-            marginBottom: '0.25rem',
+            marginBottom: '0.35rem',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span style={{

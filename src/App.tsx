@@ -2,14 +2,13 @@ import { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { FileScanner } from './components/FileScanner';
 import { LinkScanner } from './components/LinkScanner';
-import { YaraStudio } from './components/YaraStudio';
 import { StatsDashboard } from './components/StatsDashboard';
 import { ScanReportModal } from './components/ScanReportModal';
 import type { ScanResult, SystemStats } from './types';
 import { checkBackendHealth } from './api';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<'file' | 'url' | 'yara' | 'dashboard'>('file');
+  const [activeTab, setActiveTab] = useState<'file' | 'url' | 'dashboard'>('file');
   const [backendOnline, setBackendOnline] = useState<boolean>(false);
   const [lastScanResult, setLastScanResult] = useState<ScanResult | null>(null);
 
@@ -57,7 +56,6 @@ export function App() {
       <main style={{ flex: 1, paddingBottom: '3rem' }}>
         {activeTab === 'file' && <FileScanner onScanComplete={handleScanComplete} />}
         {activeTab === 'url' && <LinkScanner onScanComplete={handleScanComplete} />}
-        {activeTab === 'yara' && <YaraStudio />}
         {activeTab === 'dashboard' && <StatsDashboard stats={stats} />}
       </main>
 

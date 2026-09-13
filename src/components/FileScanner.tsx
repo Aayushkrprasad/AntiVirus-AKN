@@ -50,9 +50,9 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
   };
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', padding: '2.5rem 1rem' }}>
+    <div className="page-container">
       {/* Top Banner Header */}
-      <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -70,10 +70,10 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
           <Terminal size={14} /> HEURISTIC BYTECODE INSPECTION ENGINE
         </div>
 
-        <h2 style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.6rem' }} className="text-gradient">
+        <h2 style={{ fontSize: 'clamp(1.6rem, 5vw, 2.4rem)', fontWeight: 900, marginBottom: '0.6rem' }} className="text-gradient">
           Upload & Inspect Any Payload File
         </h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: 640, margin: '0 auto', lineHeight: 1.6 }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: 'clamp(0.85rem, 2.5vw, 1rem)', maxWidth: 640, margin: '0 auto', lineHeight: 1.6 }}>
           Drag and drop any binary, document, executable, or Android APK. Performs YARA pattern matching, SHA-256 reputation checks, and Shannon entropy analysis.
         </p>
       </div>
@@ -95,7 +95,7 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
         }}
         onClick={() => fileInputRef.current?.click()}
         style={{
-          padding: '4rem 2rem',
+          padding: 'clamp(2rem, 6vw, 4rem) 1.25rem',
           textAlign: 'center',
           cursor: 'pointer',
           border: isDragging ? '2px dashed var(--primary-neon)' : '2px dashed rgba(30, 41, 59, 0.9)',
@@ -247,7 +247,7 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
       </div>
 
       {/* Feature Capabilities Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem' }}>
+      <div className="grid-responsive-cards">
         <div className="glass-card" style={{ padding: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.6rem' }}>
             <div style={{ padding: 8, borderRadius: 10, background: 'rgba(0, 240, 255, 0.1)', border: '1px solid rgba(0, 240, 255, 0.2)' }}>

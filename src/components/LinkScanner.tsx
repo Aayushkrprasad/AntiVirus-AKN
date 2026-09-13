@@ -49,9 +49,9 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
   };
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', padding: '2.5rem 1rem' }}>
+    <div className="page-container">
       {/* Top Banner Header */}
-      <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -69,16 +69,16 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
           <Globe size={14} /> DOMAIN & LINK REPUTATION ENGINE
         </div>
 
-        <h2 style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.6rem' }} className="text-gradient">
+        <h2 style={{ fontSize: 'clamp(1.6rem, 5vw, 2.4rem)', fontWeight: 900, marginBottom: '0.6rem' }} className="text-gradient">
           Paste Any Customized Link to Scan
         </h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: 640, margin: '0 auto', lineHeight: 1.6 }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: 'clamp(0.85rem, 2.5vw, 1rem)', maxWidth: 640, margin: '0 auto', lineHeight: 1.6 }}>
           Inspect custom links, shortened URLs, and domain names for phishing attempts, brand spoofing keywords, high-risk top-level domains, and SSL certificate compliance.
         </p>
       </div>
 
       {/* Futuristic Command URL Input Box */}
-      <div className="glass-card" style={{ padding: '2.25rem', marginBottom: '2.5rem', boxShadow: '0 12px 40px rgba(0, 0, 0, 0.5)' }}>
+      <div className="glass-card" style={{ padding: 'clamp(1.25rem, 4vw, 2.25rem)', marginBottom: '2.5rem', boxShadow: '0 12px 40px rgba(0, 0, 0, 0.5)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem' }}>
           <label style={{
             fontSize: '0.75rem',
@@ -206,7 +206,7 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
           CLICK SAMPLE LINK FOR INSTANT THREAT SCAN
         </h4>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.85rem' }}>
+        <div className="grid-responsive-cards">
           {SAMPLE_LINKS.map((sample, idx) => (
             <div
               key={idx}
@@ -246,7 +246,7 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
       </div>
 
       {/* Inspection Checks Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem' }}>
+      <div className="grid-responsive-cards">
         <div className="glass-card" style={{ padding: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.6rem' }}>
             <div style={{ padding: 8, borderRadius: 10, background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.2)' }}>

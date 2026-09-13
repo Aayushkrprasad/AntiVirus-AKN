@@ -21,9 +21,6 @@
 ### 🔬 3. Interactive Hex Viewer & Opcode Inspector
 - Inspect binary offset addresses (`00000000`), 16-byte hexadecimal byte streams (`4D 5A 90 00 ...`), ASCII character decoding, search string filters, and 1-click **Copy Raw Hex** tool.
 
-### 📝 4. Custom YARA Rule Studio & Compiler
-- Live YARA rule editor with starter templates (`Trojan Execution`, `Ransomware Encryptor`, `PHP Webshell`, `High Entropy Binary Packer`).
-- Live **Compile & Run YARA Sandbox Test** button with AST syntax console output.
 
 ### 🌐 5. VirusTotal Threat Intelligence & Reports
 - Cross-references scan targets against 72 global AV detection engines (`72/72 Clean`).

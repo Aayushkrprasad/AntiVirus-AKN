@@ -61,6 +61,8 @@ export const HexViewerModal: React.FC<HexViewerModalProps> = ({ filename, onClos
           padding: '1.25rem 1.75rem',
           borderBottom: '1px solid var(--border-color)',
           background: 'rgba(11, 17, 32, 0.8)',
+          flexWrap: 'wrap',
+          gap: '0.75rem',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <div style={{ padding: 8, borderRadius: 10, background: 'rgba(0, 240, 255, 0.1)', border: '1px solid rgba(0, 240, 255, 0.25)' }}>
@@ -117,6 +119,8 @@ export const HexViewerModal: React.FC<HexViewerModalProps> = ({ filename, onClos
           padding: '0.85rem 1.75rem',
           background: 'rgba(6, 9, 19, 0.6)',
           borderBottom: '1px solid var(--border-color)',
+          flexWrap: 'wrap',
+          gap: '0.75rem',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(11, 17, 32, 0.8)', border: '1px solid var(--border-color)', padding: '0.35rem 0.75rem', borderRadius: 8, width: 300 }}>
             <Search size={14} color="var(--text-muted)" />
@@ -136,7 +140,7 @@ export const HexViewerModal: React.FC<HexViewerModalProps> = ({ filename, onClos
         </div>
 
         {/* Main Hex Viewer Table Body */}
-        <div style={{
+        <div className="table-scroll-wrapper" style={{
           flex: 1,
           padding: '1.5rem 1.75rem',
           overflowY: 'auto',
@@ -145,29 +149,31 @@ export const HexViewerModal: React.FC<HexViewerModalProps> = ({ filename, onClos
           background: '#040711',
           lineHeight: 1.6,
         }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr 180px', gap: '1.5rem', fontWeight: 700, color: 'var(--text-dim)', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border-color)', marginBottom: '0.75rem' }}>
-            <span>OFFSET</span>
-            <span>HEXADECIMAL BYTE STREAM (16-BYTES)</span>
-            <span>ASCII DECODED</span>
-          </div>
-
-          {hexRows.map((row, idx) => (
-            <div
-              key={idx}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '100px 1fr 180px',
-                gap: '1.5rem',
-                padding: '0.3rem 0',
-                borderBottom: '1px solid rgba(30, 41, 59, 0.4)',
-                background: idx === 0 ? 'rgba(16, 185, 129, 0.08)' : idx >= 5 && idx <= 7 ? 'rgba(245, 158, 11, 0.08)' : 'transparent',
-              }}
-            >
-              <span style={{ color: 'var(--primary-neon)' }}>{row.offset}</span>
-              <span style={{ color: 'var(--text-main)', letterSpacing: '0.05em' }}>{row.hex}</span>
-              <span style={{ color: 'var(--text-muted)', borderLeft: '1px solid var(--border-color)', paddingLeft: '0.75rem' }}>{row.ascii}</span>
+          <div style={{ minWidth: 620 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr 180px', gap: '1.5rem', fontWeight: 700, color: 'var(--text-dim)', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border-color)', marginBottom: '0.75rem' }}>
+              <span>OFFSET</span>
+              <span>HEXADECIMAL BYTE STREAM (16-BYTES)</span>
+              <span>ASCII DECODED</span>
             </div>
-          ))}
+
+            {hexRows.map((row, idx) => (
+              <div
+                key={idx}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '100px 1fr 180px',
+                  gap: '1.5rem',
+                  padding: '0.3rem 0',
+                  borderBottom: '1px solid rgba(30, 41, 59, 0.4)',
+                  background: idx === 0 ? 'rgba(16, 185, 129, 0.08)' : idx >= 5 && idx <= 7 ? 'rgba(245, 158, 11, 0.08)' : 'transparent',
+                }}
+              >
+                <span style={{ color: 'var(--primary-neon)' }}>{row.offset}</span>
+                <span style={{ color: 'var(--text-main)', letterSpacing: '0.05em' }}>{row.hex}</span>
+                <span style={{ color: 'var(--text-muted)', borderLeft: '1px solid var(--border-color)', paddingLeft: '0.75rem' }}>{row.ascii}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

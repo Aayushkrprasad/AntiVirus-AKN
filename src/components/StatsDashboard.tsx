@@ -40,9 +40,9 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({ stats }) => {
   };
 
   return (
-    <div style={{ maxWidth: 960, margin: '0 auto', padding: '2.5rem 1rem' }}>
+    <div className="page-container">
       {/* Top Banner Header */}
-      <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -60,10 +60,10 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({ stats }) => {
           <Shield size={14} /> SECURITY POSTURE MONITORING
         </div>
 
-        <h2 style={{ fontSize: '2.4rem', fontWeight: 900, marginBottom: '0.6rem' }} className="text-gradient">
+        <h2 style={{ fontSize: 'clamp(1.6rem, 5vw, 2.4rem)', fontWeight: 900, marginBottom: '0.6rem' }} className="text-gradient">
           System Security Center & Health Score
         </h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: 620, margin: '0 auto', lineHeight: 1.6 }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: 'clamp(0.85rem, 2.5vw, 1rem)', maxWidth: 620, margin: '0 auto', lineHeight: 1.6 }}>
           Real-time threat status monitor, scan history statistics, virus signature database updates, and encrypted password vault.
         </p>
       </div>
@@ -108,7 +108,7 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({ stats }) => {
       </div>
 
       {/* Overview Cards Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', marginBottom: '2.5rem' }}>
+      <div className="grid-responsive-stats" style={{ marginBottom: '2.5rem' }}>
         <div className="glass-card" style={{ padding: '1.5rem', textAlign: 'center' }}>
           <ShieldCheck size={32} color="var(--status-safe)" style={{ margin: '0 auto 0.75rem' }} />
           <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, letterSpacing: '0.05em' }}>PROTECTION LEVEL</p>
@@ -135,7 +135,7 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({ stats }) => {
       </div>
 
       {/* Webhook & Discord/Slack Dispatcher Container */}
-      <div className="glass-card" style={{ padding: '2.25rem', marginBottom: '2.5rem' }}>
+      <div className="glass-card" style={{ padding: 'clamp(1.25rem, 4vw, 2.25rem)', marginBottom: '2.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1.25rem' }}>
           <div style={{ padding: 10, borderRadius: 12, background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.25)' }}>
             <Bell size={24} color="var(--status-warning)" />
@@ -146,7 +146,7 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({ stats }) => {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.85rem', marginBottom: '1rem' }}>
+        <div className="responsive-flex-stack" style={{ marginBottom: '1rem' }}>
           <input
             type="url"
             placeholder="https://discord.com/api/webhooks/... or https://hooks.slack.com/..."
@@ -196,7 +196,7 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({ stats }) => {
       </div>
 
       {/* Encrypted Password Vault Container */}
-      <div className="glass-card" style={{ padding: '2.25rem', marginBottom: '2.5rem' }}>
+      <div className="glass-card" style={{ padding: 'clamp(1.25rem, 4vw, 2.25rem)', marginBottom: '2.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1.5rem' }}>
           <div style={{ padding: 10, borderRadius: 12, background: 'rgba(0, 240, 255, 0.1)', border: '1px solid rgba(0, 240, 255, 0.25)' }}>
             <Lock size={24} color="var(--primary-neon)" />
@@ -207,7 +207,7 @@ export const StatsDashboard: React.FC<StatsDashboardProps> = ({ stats }) => {
           </div>
         </div>
 
-        <form onSubmit={handleAddCredential} style={{ display: 'flex', gap: '0.85rem', marginBottom: '1.75rem' }}>
+        <form onSubmit={handleAddCredential} className="responsive-flex-stack" style={{ marginBottom: '1.75rem' }}>
           <input
             type="text"
             placeholder="Website/Service (e.g. github.com)"

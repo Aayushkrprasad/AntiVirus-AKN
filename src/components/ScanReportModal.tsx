@@ -44,13 +44,7 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
         zIndex: 1000,
         padding: '1.5rem',
       }}>
-        <div className="glass-card" style={{
-          width: '100%',
-          maxWidth: 760,
-          maxHeight: '90vh',
-          overflowY: 'auto',
-          padding: '2.25rem',
-          borderRadius: 24,
+        <div className="glass-card responsive-modal-container" style={{
           position: 'relative',
           border: `1px solid ${isClean ? 'var(--status-safe-glow)' : 'var(--status-danger-glow)'}`,
         }}>
@@ -110,6 +104,8 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '0.75rem',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <div style={{ padding: 8, borderRadius: 10, background: 'rgba(0, 240, 255, 0.1)', border: '1px solid rgba(0, 240, 255, 0.2)' }}>
@@ -135,10 +131,7 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
           </div>
 
           {/* Metrics Grid */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '1rem',
+          <div className="grid-responsive-stats" style={{
             marginBottom: '2rem',
             background: 'rgba(6, 9, 19, 0.7)',
             padding: '1.25rem',
@@ -293,7 +286,7 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
           )}
 
           {/* Export Action Buttons */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem', marginBottom: '1rem' }}>
+          <div className="responsive-flex-stack" style={{ marginBottom: '1rem' }}>
             <button
               onClick={handlePrintPDF}
               style={{

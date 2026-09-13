@@ -35,16 +35,16 @@ export const Header: React.FC<HeaderProps> = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0.85rem 1.5rem',
+        padding: '0.75rem 1rem',
         maxWidth: 1280,
         margin: '0 auto',
       }}>
         {/* Brand Logo & Cyber Shield */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
           <div style={{
             position: 'relative',
-            width: 40,
-            height: 40,
+            width: 38,
+            height: 38,
             borderRadius: 12,
             background: 'linear-gradient(135deg, #00F0FF 0%, #7000FF 100%)',
             display: 'flex',
@@ -53,18 +53,19 @@ export const Header: React.FC<HeaderProps> = ({
             boxShadow: '0 0 16px rgba(0, 240, 255, 0.4)',
             flexShrink: 0,
           }}>
-            <ShieldCheck size={24} color="#000" />
+            <ShieldCheck size={22} color="#000" />
           </div>
 
           <div>
             <h1 style={{
-              fontSize: '1.2rem',
+              fontSize: 'clamp(1rem, 4vw, 1.25rem)',
               fontWeight: 900,
               letterSpacing: '-0.03em',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
+              gap: '0.35rem',
               lineHeight: 1.1,
+              whiteSpace: 'nowrap',
             }}>
               ANTIVIRUS <span className="text-neon">AKN</span>
             </h1>
@@ -161,28 +162,33 @@ export const Header: React.FC<HeaderProps> = ({
         </nav>
 
         {/* Live Server Connection Status & Mobile Menu Toggle */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.35rem 0.75rem',
-            borderRadius: 20,
-            background: backendOnline ? 'rgba(16, 185, 129, 0.08)' : 'rgba(245, 158, 11, 0.08)',
-            border: `1px solid ${backendOnline ? 'var(--status-safe)' : 'var(--status-warning)'}`,
-            fontSize: '0.725rem',
-            fontWeight: 700,
-            color: backendOnline ? 'var(--status-safe)' : 'var(--status-warning)',
-          }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: 'auto', flexShrink: 0 }}>
+          <div
+            title={backendOnline ? 'FastAPI Backend Online' : 'Client Inspection Engine Active'}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              padding: '0.35rem 0.65rem',
+              borderRadius: 20,
+              background: backendOnline ? 'rgba(16, 185, 129, 0.08)' : 'rgba(245, 158, 11, 0.08)',
+              border: `1px solid ${backendOnline ? 'var(--status-safe)' : 'var(--status-warning)'}`,
+              fontSize: '0.725rem',
+              fontWeight: 700,
+              color: backendOnline ? 'var(--status-safe)' : 'var(--status-warning)',
+              flexShrink: 0,
+            }}
+          >
             <span style={{
               width: 7,
               height: 7,
               borderRadius: '50%',
               backgroundColor: backendOnline ? 'var(--status-safe)' : 'var(--status-warning)',
               boxShadow: `0 0 8px ${backendOnline ? 'var(--status-safe)' : 'var(--status-warning)'}`,
+              flexShrink: 0,
             }} />
-            <Server size={13} />
-            <span>{backendOnline ? 'FastAPI Connected' : 'Engine Active'}</span>
+            <Server size={13} style={{ flexShrink: 0 }} />
+            <span className="hide-on-mobile">{backendOnline ? 'FastAPI Connected' : 'Engine Active'}</span>
           </div>
 
           <button
@@ -197,6 +203,7 @@ export const Header: React.FC<HeaderProps> = ({
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
+              flexShrink: 0,
             }}
           >
             <RefreshCw size={14} />
@@ -216,7 +223,7 @@ export const Header: React.FC<HeaderProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              marginLeft: '0.25rem',
+              flexShrink: 0,
             }}
             aria-label="Toggle Mobile Menu"
           >
@@ -239,6 +246,33 @@ export const Header: React.FC<HeaderProps> = ({
             boxShadow: '0 10px 25px rgba(0,0,0,0.8)',
           }}
         >
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0.6rem 0.85rem',
+            borderRadius: 10,
+            background: backendOnline ? 'rgba(16, 185, 129, 0.08)' : 'rgba(245, 158, 11, 0.08)',
+            border: `1px solid ${backendOnline ? 'var(--status-safe)' : 'var(--status-warning)'}`,
+            fontSize: '0.8rem',
+            fontWeight: 700,
+            color: backendOnline ? 'var(--status-safe)' : 'var(--status-warning)',
+            marginBottom: '0.25rem',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+                backgroundColor: backendOnline ? 'var(--status-safe)' : 'var(--status-warning)',
+                boxShadow: `0 0 8px ${backendOnline ? 'var(--status-safe)' : 'var(--status-warning)'}`,
+              }} />
+              <Server size={15} />
+              <span>Engine Status</span>
+            </div>
+            <span>{backendOnline ? 'FastAPI Connected' : 'Engine Active'}</span>
+          </div>
+
           <button
             onClick={() => handleTabClick('file')}
             style={{

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Globe, ShieldAlert, AlertTriangle, Lock, ArrowRight, Zap, RefreshCw, Link as LinkIcon, Clipboard } from 'lucide-react';
+import { Globe, ShieldAlert, AlertTriangle, Lock, ArrowRight, Zap, RefreshCw, Link as LinkIcon, Clipboard, Play } from 'lucide-react';
 import type { ScanResult } from '../types';
 import { scanUrl } from '../api';
 
@@ -27,12 +27,13 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
         if (errorMsg) setErrorMsg('');
       }
     } catch {
-      // Permission denied
+      // Permission denied fallback
     }
   };
 
-  const handleScan = async () => {
-    if (!urlInput || !urlInput.trim()) {
+  const handleScan = async (targetUrl?: string) => {
+    const finalUrl = (targetUrl || urlInput).trim();
+    if (!finalUrl) {
       setErrorMsg('Please enter or paste a valid link/URL to scan.');
       return;
     }
@@ -40,7 +41,7 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
     setErrorMsg('');
     setIsScanning(true);
 
-    const result = await scanUrl(urlInput.trim());
+    const result = await scanUrl(finalUrl);
 
     setTimeout(() => {
       setIsScanning(false);
@@ -56,35 +57,35 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
           display: 'inline-flex',
           alignItems: 'center',
           gap: '0.5rem',
-          padding: '0.4rem 1rem',
+          padding: '0.45rem 1.15rem',
           borderRadius: 20,
-          background: 'rgba(0, 240, 255, 0.08)',
-          border: '1px solid rgba(0, 240, 255, 0.25)',
-          color: 'var(--primary-neon)',
+          background: 'rgba(59, 130, 246, 0.1)',
+          border: '1px solid rgba(59, 130, 246, 0.25)',
+          color: 'var(--primary-accent)',
           fontSize: '0.8rem',
-          fontWeight: 700,
+          fontWeight: 800,
           marginBottom: '1rem',
           letterSpacing: '0.05em',
         }}>
           <Globe size={14} /> DOMAIN & LINK REPUTATION ENGINE
         </div>
 
-        <h2 style={{ fontSize: 'clamp(1.6rem, 5vw, 2.4rem)', fontWeight: 900, marginBottom: '0.6rem' }} className="text-gradient">
+        <h2 style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', fontWeight: 900, marginBottom: '0.6rem' }} className="text-gradient">
           Paste Any Customized Link to Scan
         </h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: 'clamp(0.85rem, 2.5vw, 1rem)', maxWidth: 640, margin: '0 auto', lineHeight: 1.6 }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: 'clamp(0.85rem, 2.5vw, 1rem)', maxWidth: 660, margin: '0 auto', lineHeight: 1.6 }}>
           Inspect custom links, shortened URLs, and domain names for phishing attempts, brand spoofing keywords, high-risk top-level domains, and SSL certificate compliance.
         </p>
       </div>
 
-      {/* Futuristic Command URL Input Box */}
-      <div className="glass-card" style={{ padding: 'clamp(1.25rem, 4vw, 2.25rem)', marginBottom: '2.5rem', boxShadow: '0 12px 40px rgba(0, 0, 0, 0.5)' }}>
+      {/* Enterprise Command URL Input Box */}
+      <div className="glass-card" style={{ padding: 'clamp(1.5rem, 4vw, 2.5rem)', marginBottom: '2.5rem', boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem' }}>
           <label style={{
             fontSize: '0.75rem',
             fontWeight: 800,
-            color: 'var(--primary-neon)',
-            letterSpacing: '0.08em',
+            color: 'var(--primary-accent)',
+            letterSpacing: '0.06em',
           }}>
             PASTE CUSTOMIZED LINK / TARGET URL
           </label>
@@ -92,35 +93,36 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
           <button
             onClick={handlePaste}
             style={{
-              background: 'rgba(0, 240, 255, 0.08)',
-              border: '1px solid rgba(0, 240, 255, 0.25)',
-              color: 'var(--primary-neon)',
+              background: 'rgba(59, 130, 246, 0.1)',
+              border: '1px solid rgba(59, 130, 246, 0.25)',
+              color: 'var(--primary-accent)',
               fontSize: '0.75rem',
-              fontWeight: 700,
-              padding: '0.25rem 0.65rem',
-              borderRadius: 6,
+              fontWeight: 800,
+              padding: '0.3rem 0.75rem',
+              borderRadius: 8,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.35rem',
+              gap: '0.4rem',
+              transition: 'all 0.2s ease',
             }}
           >
-            <Clipboard size={12} /> Paste from Clipboard
+            <Clipboard size={13} /> Paste from Clipboard
           </button>
         </div>
 
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          background: 'rgba(3, 7, 18, 0.9)',
+          background: 'rgba(10, 14, 23, 0.95)',
           border: '1px solid var(--border-color)',
           borderRadius: 14,
-          padding: '0.6rem 1.2rem',
+          padding: '0.75rem 1.25rem',
           marginBottom: '1.25rem',
-          boxShadow: 'inset 0 2px 10px rgba(0, 0, 0, 0.8)',
+          boxShadow: 'inset 0 2px 10px rgba(0, 0, 0, 0.7)',
           transition: 'all 0.25s ease',
         }}>
-          <LinkIcon size={22} color="var(--primary-neon)" style={{ marginRight: '0.85rem', flexShrink: 0 }} />
+          <LinkIcon size={22} color="var(--primary-accent)" style={{ marginRight: '0.85rem', flexShrink: 0 }} />
           <input
             type="url"
             placeholder="https://example.com/customized-link..."
@@ -167,34 +169,33 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
         )}
 
         <button
-          onClick={handleScan}
+          onClick={() => handleScan()}
           disabled={isScanning}
           style={{
             width: '100%',
-            background: isScanning ? 'var(--border-color)' : 'linear-gradient(135deg, #00F0FF 0%, #3B82F6 100%)',
-            color: '#000',
-            fontWeight: 900,
+            background: isScanning ? 'var(--border-color)' : 'var(--primary-accent)',
+            color: '#FFF',
+            fontWeight: 800,
             fontSize: '1rem',
-            padding: '1rem',
+            padding: '0.95rem',
             borderRadius: 12,
             border: 'none',
             cursor: isScanning ? 'wait' : 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.6rem',
-            boxShadow: '0 0 30px rgba(0, 240, 255, 0.35)',
-            letterSpacing: '0.04em',
+            gap: '0.65rem',
+            boxShadow: '0 4px 16px rgba(59, 130, 246, 0.3)',
             transition: 'all 0.25s ease',
           }}
         >
           {isScanning ? (
             <>
-              <RefreshCw size={22} className="pulse-radar" /> Analyzing Link Protocol & Domain...
+              <RefreshCw size={20} className="pulse-radar" /> Analyzing Link Protocol & Domain Reputation...
             </>
           ) : (
             <>
-              <Zap size={22} /> SCAN CUSTOMIZED LINK NOW <ArrowRight size={22} />
+              <Zap size={20} /> SCAN CUSTOMIZED LINK NOW <ArrowRight size={20} />
             </>
           )}
         </button>
@@ -202,7 +203,7 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
 
       {/* Preset Demo Links */}
       <div style={{ marginBottom: '2.5rem' }}>
-        <h4 style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-dim)', letterSpacing: '0.08em', marginBottom: '1rem' }}>
+        <h4 style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--primary-accent)', letterSpacing: '0.06em', marginBottom: '1rem' }}>
           CLICK SAMPLE LINK FOR INSTANT THREAT SCAN
         </h4>
 
@@ -214,32 +215,38 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
               onClick={() => {
                 setUrlInput(sample.url);
                 setErrorMsg('');
+                handleScan(sample.url);
               }}
               style={{
-                padding: '1rem 1.15rem',
+                padding: '1.1rem 1.25rem',
                 cursor: 'pointer',
                 borderRadius: 14,
-                transition: 'all 0.2s ease',
+                transition: 'all 0.25s ease',
                 border: '1px solid var(--border-color)',
+                background: 'rgba(17, 24, 39, 0.85)',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-                <p style={{ fontSize: '0.85rem', fontWeight: 700 }}>{sample.label}</p>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
+                <p style={{ fontSize: '0.875rem', fontWeight: 800 }}>{sample.label}</p>
                 <span style={{
                   fontSize: '0.65rem',
                   fontWeight: 800,
-                  padding: '0.15rem 0.45rem',
+                  padding: '0.2rem 0.55rem',
                   borderRadius: 6,
-                  backgroundColor: 'rgba(6, 9, 19, 0.8)',
+                  backgroundColor: 'rgba(10, 14, 23, 0.9)',
                   color: sample.color,
                   border: `1px solid ${sample.color}`,
+                  fontFamily: 'var(--font-mono)',
                 }}>
                   {sample.type}
                 </span>
               </div>
-              <p style={{ fontSize: '0.75rem', color: 'var(--primary-neon)', fontFamily: 'var(--font-mono)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <p style={{ fontSize: '0.785rem', color: 'var(--primary-accent)', fontFamily: 'var(--font-mono)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '0.5rem' }}>
                 {sample.url}
               </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.725rem', fontWeight: 800, color: 'var(--text-muted)' }}>
+                <Play size={11} fill="var(--text-muted)" /> Instant Test
+              </div>
             </div>
           ))}
         </div>
@@ -261,7 +268,7 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
 
         <div className="glass-card" style={{ padding: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.6rem' }}>
-            <div style={{ padding: 8, borderRadius: 10, background: 'rgba(255, 42, 109, 0.1)', border: '1px solid rgba(255, 42, 109, 0.2)' }}>
+            <div style={{ padding: 8, borderRadius: 10, background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
               <AlertTriangle size={22} color="var(--status-danger)" />
             </div>
             <h4 style={{ fontWeight: 800, fontSize: '1rem' }}>High-Risk TLD Classifier</h4>
@@ -273,8 +280,8 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
 
         <div className="glass-card" style={{ padding: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.6rem' }}>
-            <div style={{ padding: 8, borderRadius: 10, background: 'rgba(0, 240, 255, 0.1)', border: '1px solid rgba(0, 240, 255, 0.2)' }}>
-              <Lock size={22} color="var(--primary-neon)" />
+            <div style={{ padding: 8, borderRadius: 10, background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+              <Lock size={22} color="var(--primary-accent)" />
             </div>
             <h4 style={{ fontWeight: 800, fontSize: '1rem' }}>SSL & Protocol Check</h4>
           </div>
@@ -286,3 +293,5 @@ export const LinkScanner: React.FC<LinkScannerProps> = ({ onScanComplete }) => {
     </div>
   );
 };
+
+

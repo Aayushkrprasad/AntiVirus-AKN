@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, ShieldAlert, X, FileText, Code, Binary, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, X, FileText, Code, Binary, CheckCircle2, Copy, Check } from 'lucide-react';
 import type { ScanResult } from '../types';
 import { HexViewerModal } from './HexViewerModal';
 
@@ -10,10 +10,19 @@ interface ScanReportModalProps {
 
 export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClose }) => {
   const [showHexModal, setShowHexModal] = useState(false);
+  const [copiedHash, setCopiedHash] = useState(false);
 
   if (!result) return null;
 
   const isClean = result.status === 'clean';
+
+  const handleCopySha256 = () => {
+    if (result.fileMeta?.sha256) {
+      navigator.clipboard.writeText(result.fileMeta.sha256);
+      setCopiedHash(true);
+      setTimeout(() => setCopiedHash(false), 2000);
+    }
+  };
 
   const handleExportJSON = () => {
     const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
@@ -36,8 +45,8 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
       <div style={{
         position: 'fixed',
         inset: 0,
-        background: 'rgba(3, 7, 18, 0.88)',
-        backdropFilter: 'blur(16px)',
+        background: 'rgba(3, 7, 18, 0.92)',
+        backdropFilter: 'blur(20px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -46,7 +55,8 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
       }}>
         <div className="glass-card responsive-modal-container" style={{
           position: 'relative',
-          border: `1px solid ${isClean ? 'var(--status-safe-glow)' : 'var(--status-danger-glow)'}`,
+          border: `1px solid ${isClean ? 'var(--status-safe)' : 'var(--status-danger)'}`,
+          boxShadow: `0 0 50px ${isClean ? 'rgba(16, 185, 129, 0.25)' : 'rgba(255, 42, 109, 0.35)'}`,
         }}>
           {/* Close Button */}
           <button
@@ -55,48 +65,49 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
               position: 'absolute',
               top: 20,
               right: 20,
-              background: 'none',
-              border: 'none',
+              background: 'rgba(11, 17, 32, 0.8)',
+              border: '1px solid var(--border-color)',
+              borderRadius: 8,
               color: 'var(--text-muted)',
               cursor: 'pointer',
-              padding: 8,
+              padding: 6,
             }}
           >
-            <X size={24} />
+            <X size={20} />
           </button>
 
           {/* Top Status Header */}
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <div style={{
-              width: 84,
-              height: 84,
+              width: 88,
+              height: 88,
               borderRadius: '50%',
-              background: isClean ? 'var(--status-safe-glow)' : 'var(--status-danger-glow)',
+              background: isClean ? 'rgba(16, 185, 129, 0.12)' : 'rgba(255, 42, 109, 0.12)',
               border: `2px solid ${isClean ? 'var(--status-safe)' : 'var(--status-danger)'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 1.25rem',
-              boxShadow: `0 0 30px ${isClean ? 'var(--status-safe-glow)' : 'var(--status-danger-glow)'}`,
+              boxShadow: `0 0 35px ${isClean ? 'rgba(16, 185, 129, 0.4)' : 'rgba(255, 42, 109, 0.5)'}`,
             }}>
               {isClean ? (
-                <ShieldCheck size={46} color="var(--status-safe)" />
+                <ShieldCheck size={50} color="var(--status-safe)" />
               ) : (
-                <ShieldAlert size={46} color="var(--status-danger)" />
+                <ShieldAlert size={50} color="var(--status-danger)" />
               )}
             </div>
 
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 900, marginBottom: '0.25rem' }}>
-              {isClean ? 'SECURITY VERIFIED — CLEAN' : 'SECURITY RISKS DETECTED'}
+            <h2 style={{ fontSize: '1.9rem', fontWeight: 900, marginBottom: '0.25rem' }}>
+              {isClean ? 'SECURITY VERIFIED — CLEAN' : 'THREAT RISK DETECTED'}
             </h2>
             <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>
-              Scanned Target: <span style={{ color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>{result.scannedItemName}</span>
+              Target: <span style={{ color: 'var(--primary-neon)', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>{result.scannedItemName}</span>
             </p>
           </div>
 
           {/* VirusTotal Reputation Card */}
           <div style={{
-            background: 'rgba(11, 17, 32, 0.9)',
+            background: 'rgba(11, 17, 32, 0.95)',
             border: '1px solid var(--border-color)',
             borderRadius: 16,
             padding: '1rem 1.25rem',
@@ -108,23 +119,24 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
             gap: '0.75rem',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <div style={{ padding: 8, borderRadius: 10, background: 'rgba(0, 240, 255, 0.1)', border: '1px solid rgba(0, 240, 255, 0.2)' }}>
+              <div style={{ padding: 8, borderRadius: 10, background: 'rgba(0, 240, 255, 0.1)', border: '1px solid rgba(0, 240, 255, 0.25)' }}>
                 <CheckCircle2 size={22} color="var(--primary-neon)" />
               </div>
               <div>
-                <h4 style={{ fontSize: '0.95rem', fontWeight: 800 }}>VirusTotal Threat Intelligence</h4>
+                <h4 style={{ fontSize: '0.95rem', fontWeight: 800 }}>VirusTotal Global Intelligence</h4>
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Cross-referenced with 72 global AV detection engines</p>
               </div>
             </div>
 
             <span style={{
               fontSize: '0.9rem',
-              fontWeight: 800,
+              fontWeight: 900,
               fontFamily: 'var(--font-mono)',
               color: isClean ? 'var(--status-safe)' : 'var(--status-danger)',
               padding: '0.35rem 0.85rem',
               borderRadius: 20,
               background: isClean ? 'var(--status-safe-glow)' : 'var(--status-danger-glow)',
+              border: `1px solid ${isClean ? 'var(--status-safe)' : 'var(--status-danger)'}`,
             }}>
               {isClean ? '72 / 72 Clean' : 'Threat Flagged'}
             </span>
@@ -133,27 +145,27 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
           {/* Metrics Grid */}
           <div className="grid-responsive-stats" style={{
             marginBottom: '2rem',
-            background: 'rgba(6, 9, 19, 0.7)',
+            background: 'rgba(3, 7, 18, 0.8)',
             padding: '1.25rem',
             borderRadius: 16,
             border: '1px solid var(--border-color)',
             textAlign: 'center',
           }}>
             <div>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700 }}>SECURITY SCORE</p>
-              <p style={{ fontSize: '1.6rem', fontWeight: 900, color: isClean ? 'var(--status-safe)' : 'var(--status-danger)' }}>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 800, letterSpacing: '0.05em' }}>SECURITY SCORE</p>
+              <p style={{ fontSize: '1.7rem', fontWeight: 900, color: isClean ? 'var(--status-safe)' : 'var(--status-danger)' }}>
                 {result.securityScore} / 100
               </p>
             </div>
             <div>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700 }}>SCAN DURATION</p>
-              <p style={{ fontSize: '1.6rem', fontWeight: 900, color: 'var(--primary-neon)' }}>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 800, letterSpacing: '0.05em' }}>SCAN LATENCY</p>
+              <p style={{ fontSize: '1.7rem', fontWeight: 900, color: 'var(--primary-neon)' }}>
                 {result.durationSeconds}s
               </p>
             </div>
             <div>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700 }}>THREATS FOUND</p>
-              <p style={{ fontSize: '1.6rem', fontWeight: 900, color: result.threats.length > 0 ? 'var(--status-danger)' : 'var(--status-safe)' }}>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 800, letterSpacing: '0.05em' }}>THREATS DETECTED</p>
+              <p style={{ fontSize: '1.7rem', fontWeight: 900, color: result.threats.length > 0 ? 'var(--status-danger)' : 'var(--status-safe)' }}>
                 {result.threats.length}
               </p>
             </div>
@@ -163,7 +175,7 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
           {result.fileMeta && (
             <div style={{ marginBottom: '2rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary-neon)', letterSpacing: '0.05em' }}>
+                <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary-neon)', letterSpacing: '0.06em' }}>
                   FILE PAYLOAD METADATA
                 </h4>
                 <button
@@ -173,9 +185,9 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
                     border: '1px solid rgba(0, 240, 255, 0.25)',
                     color: 'var(--primary-neon)',
                     fontSize: '0.75rem',
-                    fontWeight: 700,
-                    padding: '0.25rem 0.65rem',
-                    borderRadius: 6,
+                    fontWeight: 800,
+                    padding: '0.3rem 0.75rem',
+                    borderRadius: 8,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -187,20 +199,37 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
               </div>
 
               <div style={{
-                background: 'rgba(6, 9, 19, 0.8)',
-                padding: '1rem 1.25rem',
-                borderRadius: 14,
+                background: 'rgba(3, 7, 18, 0.9)',
+                padding: '1.15rem 1.25rem',
+                borderRadius: 16,
                 border: '1px solid var(--border-color)',
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '0.75rem',
+                gap: '0.85rem',
                 fontSize: '0.825rem',
                 fontFamily: 'var(--font-mono)',
               }}>
                 <div><span style={{ color: 'var(--text-muted)' }}>MIME Type:</span> {result.fileMeta.mimeType}</div>
                 <div><span style={{ color: 'var(--text-muted)' }}>Entropy:</span> {result.fileMeta.entropy.toFixed(2)} bits/byte</div>
-                <div style={{ gridColumn: 'span 2' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>SHA-256:</span> {result.fileMeta.sha256}
+                <div style={{ gridColumn: 'span 2', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <span style={{ color: 'var(--text-muted)' }}>SHA-256:</span> {result.fileMeta.sha256}
+                  </span>
+                  <button
+                    onClick={handleCopySha256}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--primary-neon)',
+                      cursor: 'pointer',
+                      padding: '0 0.5rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.2rem',
+                    }}
+                  >
+                    {copiedHash ? <Check size={14} /> : <Copy size={14} />}
+                  </button>
                 </div>
               </div>
             </div>
@@ -209,17 +238,17 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
           {/* URL Metadata Details if URL Scan */}
           {result.urlMeta && (
             <div style={{ marginBottom: '2rem' }}>
-              <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary-neon)', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
+              <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary-neon)', letterSpacing: '0.06em', marginBottom: '0.75rem' }}>
                 CUSTOMIZED LINK METADATA
               </h4>
               <div style={{
-                background: 'rgba(6, 9, 19, 0.8)',
-                padding: '1rem 1.25rem',
-                borderRadius: 14,
+                background: 'rgba(3, 7, 18, 0.9)',
+                padding: '1.15rem 1.25rem',
+                borderRadius: 16,
                 border: '1px solid var(--border-color)',
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '0.75rem',
+                gap: '0.85rem',
                 fontSize: '0.825rem',
                 fontFamily: 'var(--font-mono)',
               }}>
@@ -234,8 +263,8 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
           {/* Threat Items Breakdown */}
           {result.threats.length > 0 && (
             <div style={{ marginBottom: '2rem' }}>
-              <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--status-danger)', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
-                THREAT FINDINGS ({result.threats.length})
+              <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--status-danger)', letterSpacing: '0.06em', marginBottom: '0.75rem' }}>
+                THREAT FINDINGS DETECTED ({result.threats.length})
               </h4>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -266,18 +295,18 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
                       </span>
                     </div>
 
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-main)', marginBottom: '0.55rem' }}>
                       {threat.description}
                     </p>
 
                     <div style={{
                       fontSize: '0.8rem',
                       color: 'var(--text-muted)',
-                      background: 'rgba(6, 9, 19, 0.6)',
+                      background: 'rgba(3, 7, 18, 0.7)',
                       padding: '0.65rem 0.85rem',
                       borderRadius: 8,
                     }}>
-                      💡 <strong style={{ color: 'var(--text-main)' }}>Recommendation:</strong> {threat.recommendation}
+                      💡 <strong style={{ color: 'var(--text-main)' }}>Action:</strong> {threat.recommendation}
                     </div>
                   </div>
                 ))}
@@ -293,18 +322,18 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
                 background: 'rgba(59, 130, 246, 0.15)',
                 border: '1px solid var(--secondary-blue)',
                 color: 'var(--text-main)',
-                fontWeight: 700,
-                fontSize: '0.85rem',
-                padding: '0.75rem',
+                fontWeight: 800,
+                fontSize: '0.875rem',
+                padding: '0.85rem',
                 borderRadius: 12,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.5rem',
+                gap: '0.55rem',
               }}
             >
-              <FileText size={16} /> Export PDF Report
+              <FileText size={17} /> Export PDF Audit Report
             </button>
 
             <button
@@ -313,18 +342,18 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
                 background: 'rgba(139, 92, 246, 0.15)',
                 border: '1px solid var(--accent-violet)',
                 color: 'var(--text-main)',
-                fontWeight: 700,
-                fontSize: '0.85rem',
-                padding: '0.75rem',
+                fontWeight: 800,
+                fontSize: '0.875rem',
+                padding: '0.85rem',
                 borderRadius: 12,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.5rem',
+                gap: '0.55rem',
               }}
             >
-              <Code size={16} /> Export JSON Audit Log
+              <Code size={17} /> Export JSON Audit Log
             </button>
           </div>
 
@@ -335,11 +364,12 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
               background: 'var(--primary-neon)',
               color: '#000',
               fontWeight: 900,
-              fontSize: '1rem',
-              padding: '0.9rem',
+              fontSize: '1.05rem',
+              padding: '0.95rem',
               borderRadius: 12,
               border: 'none',
               cursor: 'pointer',
+              boxShadow: '0 0 25px rgba(0, 240, 255, 0.4)',
             }}
           >
             CLOSE REPORT
@@ -357,3 +387,4 @@ export const ScanReportModal: React.FC<ScanReportModalProps> = ({ result, onClos
     </>
   );
 };
+

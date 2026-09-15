@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { UploadCloud, File, ShieldCheck, FileCode, Zap, Cpu, Terminal } from 'lucide-react';
+import { UploadCloud, File, ShieldCheck, FileCode, Zap, Cpu, Terminal, Play, ShieldAlert, CheckCircle, AlertTriangle } from 'lucide-react';
 import type { ScanResult } from '../types';
 import { scanFile } from '../api';
 
@@ -16,11 +16,18 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const SUPPORTED_FORMATS = [
-    { label: 'Android APK', ext: '.apk', color: '#10B981' },
-    { label: 'Executable Binary', ext: '.exe / .dll', color: '#EF4444' },
-    { label: 'Compressed Archive', ext: '.zip / .tar', color: '#F59E0B' },
-    { label: 'Documents', ext: '.pdf / .doc', color: '#3B82F6' },
-    { label: 'Scripts & Web', ext: '.js / .vbs / .sh', color: '#8B5CF6' },
+    { label: 'Android Package', ext: '.apk', color: '#10B981' },
+    { label: 'Windows Executable', ext: '.exe / .dll', color: '#EF4444' },
+    { label: 'Compressed Archive', ext: '.zip / .tar.gz', color: '#F59E0B' },
+    { label: 'Document & PDF', ext: '.pdf / .docx', color: '#3B82F6' },
+    { label: 'Script & Payload', ext: '.js / .vbs / .py', color: '#6366F1' },
+  ];
+
+  const DEMO_SAMPLES = [
+    { name: 'sample_document_clean.pdf', size: '1.2 MB', type: 'Clean Document', icon: CheckCircle, color: '#10B981', mime: 'application/pdf' },
+    { name: 'bank_auth_trojan_v2.apk', size: '14.8 MB', type: 'Malicious APK', icon: ShieldAlert, color: '#EF4444', mime: 'application/vnd.android.package-archive' },
+    { name: 'eicar_test_signature.exe', size: '68 KB', type: 'EICAR Test Pattern', icon: AlertTriangle, color: '#F59E0B', mime: 'application/x-dsexec' },
+    { name: 'crypto_stealer_hook.js', size: '42 KB', type: 'Suspicious Script', icon: Zap, color: '#6366F1', mime: 'text/javascript' },
   ];
 
   const handleFileDrop = async (file: File) => {
@@ -49,6 +56,12 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
     }, 1000);
   };
 
+  const handleDemoScan = (sample: typeof DEMO_SAMPLES[0]) => {
+    const dummyBlob = new Blob(['FAKE_PAYLOAD_BYTE_STREAM'], { type: sample.mime });
+    const dummyFile = new (File as any)([dummyBlob], sample.name, { type: sample.mime });
+    handleFileDrop(dummyFile);
+  };
+
   return (
     <div className="page-container">
       {/* Top Banner Header */}
@@ -57,28 +70,28 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
           display: 'inline-flex',
           alignItems: 'center',
           gap: '0.5rem',
-          padding: '0.4rem 1rem',
+          padding: '0.45rem 1.15rem',
           borderRadius: 20,
-          background: 'rgba(0, 240, 255, 0.08)',
-          border: '1px solid rgba(0, 240, 255, 0.25)',
-          color: 'var(--primary-neon)',
+          background: 'rgba(59, 130, 246, 0.1)',
+          border: '1px solid rgba(59, 130, 246, 0.25)',
+          color: 'var(--primary-accent)',
           fontSize: '0.8rem',
-          fontWeight: 700,
+          fontWeight: 800,
           marginBottom: '1rem',
           letterSpacing: '0.05em',
         }}>
-          <Terminal size={14} /> HEURISTIC BYTECODE INSPECTION ENGINE
+          <Terminal size={14} /> HEURISTIC BYTECODE & YARA INSPECTION ENGINE
         </div>
 
-        <h2 style={{ fontSize: 'clamp(1.6rem, 5vw, 2.4rem)', fontWeight: 900, marginBottom: '0.6rem' }} className="text-gradient">
-          Upload & Inspect Any Payload File
+        <h2 style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', fontWeight: 900, marginBottom: '0.6rem' }} className="text-gradient">
+          Upload & Analyze Any Payload File
         </h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: 'clamp(0.85rem, 2.5vw, 1rem)', maxWidth: 640, margin: '0 auto', lineHeight: 1.6 }}>
-          Drag and drop any binary, document, executable, or Android APK. Performs YARA pattern matching, SHA-256 reputation checks, and Shannon entropy analysis.
+        <p style={{ color: 'var(--text-muted)', fontSize: 'clamp(0.85rem, 2.5vw, 1rem)', maxWidth: 660, margin: '0 auto', lineHeight: 1.6 }}>
+          Drag and drop any binary, document, executable, or Android APK. Executes YARA pattern matching, SHA-256 reputation checks, and Shannon entropy analysis.
         </p>
       </div>
 
-      {/* Cyberpunk Scanner Dropzone */}
+      {/* Enterprise Scanner Dropzone */}
       <div
         className="glass-card"
         onDragOver={(e) => {
@@ -95,20 +108,19 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
         }}
         onClick={() => fileInputRef.current?.click()}
         style={{
-          padding: 'clamp(2rem, 6vw, 4rem) 1.25rem',
+          padding: 'clamp(2.5rem, 6vw, 4rem) 1.5rem',
           textAlign: 'center',
           cursor: 'pointer',
-          border: isDragging ? '2px dashed var(--primary-neon)' : '2px dashed rgba(30, 41, 59, 0.9)',
-          background: isDragging ? 'rgba(0, 240, 255, 0.06)' : 'var(--bg-glass)',
-          borderRadius: 24,
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          border: isDragging ? '2px dashed var(--primary-accent)' : '2px dashed var(--border-color)',
+          background: isDragging ? 'rgba(59, 130, 246, 0.08)' : 'var(--bg-glass)',
+          borderRadius: 20,
+          transition: 'all 0.25s ease',
           marginBottom: '2.5rem',
           position: 'relative',
           overflow: 'hidden',
-          boxShadow: isDragging ? '0 0 40px rgba(0, 240, 255, 0.25)' : '0 10px 40px rgba(0, 0, 0, 0.5)',
+          boxShadow: isDragging ? '0 0 40px rgba(59, 130, 246, 0.2)' : '0 10px 30px rgba(0, 0, 0, 0.5)',
         }}
       >
-        {/* Laser beam animation when active scanning */}
         {isScanning && <div className="laser-beam" />}
 
         <input
@@ -130,30 +142,29 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
                 width: 90,
                 height: 90,
                 borderRadius: '50%',
-                background: 'rgba(0, 240, 255, 0.1)',
-                border: '2px solid var(--primary-neon)',
+                background: 'rgba(59, 130, 246, 0.1)',
+                border: '2px solid var(--primary-accent)',
                 margin: '0 auto 1.5rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 0 30px rgba(0, 240, 255, 0.4)',
               }}
             >
-              <Cpu size={42} color="var(--primary-neon)" />
+              <Cpu size={44} color="var(--primary-accent)" />
             </div>
 
             <h3 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.4rem' }}>
-              Analyzing: <span style={{ color: 'var(--primary-neon)', fontFamily: 'var(--font-mono)' }}>{currentFileName}</span>
+              Analyzing Target: <span style={{ color: 'var(--primary-accent)', fontFamily: 'var(--font-mono)' }}>{currentFileName}</span>
             </h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.75rem' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.75rem', fontFamily: 'var(--font-mono)' }}>
               {scanStep}
             </p>
 
-            {/* Glowing Progress Bar */}
+            {/* Progress Bar */}
             <div style={{
               width: '85%',
-              maxWidth: 460,
-              height: 10,
+              maxWidth: 480,
+              height: 8,
               background: 'rgba(15, 23, 42, 0.9)',
               borderRadius: 6,
               margin: '0 auto',
@@ -163,10 +174,9 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
               <div style={{
                 width: `${progressPercent}%`,
                 height: '100%',
-                background: 'linear-gradient(90deg, #00F0FF 0%, #3B82F6 50%, #7000FF 100%)',
+                background: 'linear-gradient(90deg, #3B82F6 0%, #6366F1 100%)',
                 borderRadius: 6,
                 transition: 'width 0.3s ease',
-                boxShadow: '0 0 12px #00F0FF',
               }} />
             </div>
           </div>
@@ -175,39 +185,38 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
             <div style={{
               width: 80,
               height: 80,
-              borderRadius: 24,
-              background: 'rgba(0, 240, 255, 0.08)',
-              border: '1px solid rgba(0, 240, 255, 0.25)',
+              borderRadius: 20,
+              background: 'rgba(59, 130, 246, 0.1)',
+              border: '1px solid rgba(59, 130, 246, 0.25)',
               margin: '0 auto 1.5rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 0 30px rgba(0, 240, 255, 0.15)',
             }}>
-              <UploadCloud size={42} color="var(--primary-neon)" />
+              <UploadCloud size={44} color="var(--primary-accent)" />
             </div>
 
             <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>
               Drag & Drop your file here to scan
             </h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.75rem' }}>
-              Supports APK, EXE, DLL, ZIP, TAR, PDF, JS, BIN, and all document types (Max 50MB)
+              Supports APK, EXE, DLL, ZIP, TAR, PDF, JS, BIN, and all binary payloads (Max 50MB)
             </p>
 
             <button
               style={{
-                background: 'linear-gradient(135deg, #00F0FF 0%, #3B82F6 100%)',
-                color: '#000',
+                background: 'var(--primary-accent)',
+                color: '#FFF',
                 fontWeight: 800,
                 fontSize: '0.95rem',
                 padding: '0.85rem 2.25rem',
-                borderRadius: 12,
+                borderRadius: 10,
                 border: 'none',
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.6rem',
-                boxShadow: '0 0 24px rgba(0, 240, 255, 0.4)',
+                gap: '0.65rem',
+                boxShadow: '0 4px 16px rgba(59, 130, 246, 0.3)',
                 transition: 'all 0.2s ease',
               }}
             >
@@ -217,9 +226,72 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
         )}
       </div>
 
+      {/* One-Click Quick Test Demo Samples */}
+      <div style={{ marginBottom: '2.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <h4 style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--primary-accent)', letterSpacing: '0.06em' }}>
+            ONE-CLICK INSTANT DEMO PAYLOAD SAMPLES
+          </h4>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>No real malware executed</span>
+        </div>
+
+        <div className="grid-responsive-cards">
+          {DEMO_SAMPLES.map((sample, idx) => {
+            const IconComponent = sample.icon;
+            return (
+              <div
+                key={idx}
+                className="glass-card"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDemoScan(sample);
+                }}
+                style={{
+                  padding: '1.15rem 1.25rem',
+                  cursor: 'pointer',
+                  borderRadius: 14,
+                  border: '1px solid var(--border-color)',
+                  background: 'rgba(17, 24, 39, 0.85)',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+                    <IconComponent size={18} color={sample.color} />
+                    <span style={{ fontSize: '0.75rem', fontWeight: 800, color: sample.color, fontFamily: 'var(--font-mono)' }}>
+                      {sample.type}
+                    </span>
+                  </div>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>{sample.size}</span>
+                </div>
+
+                <p style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.65rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {sample.name}
+                </p>
+
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  fontSize: '0.75rem',
+                  fontWeight: 800,
+                  color: 'var(--primary-accent)',
+                  padding: '0.3rem 0.6rem',
+                  borderRadius: 6,
+                  background: 'rgba(59, 130, 246, 0.1)',
+                  width: 'fit-content',
+                }}>
+                  <Play size={12} fill="var(--primary-accent)" /> Run Instant Inspection
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Format Grid Tags */}
       <div style={{ marginBottom: '2.5rem' }}>
-        <h4 style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-dim)', letterSpacing: '0.08em', marginBottom: '1rem', textAlign: 'center' }}>
+        <h4 style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-dim)', letterSpacing: '0.06em', marginBottom: '1rem', textAlign: 'center' }}>
           SUPPORTED PAYLOAD FORMATS
         </h4>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center' }}>
@@ -229,10 +301,10 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.5rem 1rem',
-                borderRadius: 12,
-                background: 'rgba(11, 17, 32, 0.8)',
+                gap: '0.55rem',
+                padding: '0.5rem 1.1rem',
+                borderRadius: 10,
+                background: 'rgba(17, 24, 39, 0.85)',
                 border: '1px solid var(--border-color)',
                 fontSize: '0.8rem',
                 fontWeight: 600,
@@ -250,8 +322,8 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
       <div className="grid-responsive-cards">
         <div className="glass-card" style={{ padding: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.6rem' }}>
-            <div style={{ padding: 8, borderRadius: 10, background: 'rgba(0, 240, 255, 0.1)', border: '1px solid rgba(0, 240, 255, 0.2)' }}>
-              <FileCode size={22} color="var(--primary-neon)" />
+            <div style={{ padding: 8, borderRadius: 10, background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+              <FileCode size={22} color="var(--primary-accent)" />
             </div>
             <h4 style={{ fontWeight: 800, fontSize: '1rem' }}>YARA Pattern Engine</h4>
           </div>
@@ -287,3 +359,5 @@ export const FileScanner: React.FC<FileScannerProps> = ({ onScanComplete }) => {
     </div>
   );
 };
+
+
